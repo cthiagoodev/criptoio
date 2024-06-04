@@ -33,13 +33,11 @@ class CryptocurrencyPriceApiClientImp : CryptocurrencyPriceApiClient {
             .block() ?: return emptyList()
 
         val mapper = ObjectMapper()
-        val response: MutableList<CryptocurrencyPrice> = mutableListOf()
-
         val json = mapper.readTree(result)
         val data = json.asIterable()
 
-        data.forEach {
-            val crypto = CryptocurrencyPrice(
+        return data.map {
+             CryptocurrencyPrice(
                 symbol = it["symbol"].asText(),
                 name = it["name"].asText(),
                 image = it["image"].asText(),
@@ -50,11 +48,7 @@ class CryptocurrencyPriceApiClientImp : CryptocurrencyPriceApiClient {
                 totalSupply = it["total_supply"].asDouble().toBigDecimal(),
                 totalVolume = it["total_volume"].asDouble().toBigDecimal(),
             )
-
-            response.add(crypto)
         }
-
-        return response
     }
 
     override fun list(filter: CryptocurrencyApiFilter): List<CryptocurrencyPrice> {

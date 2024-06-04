@@ -18,7 +18,7 @@ class CryptocurrencyApiFetcher(
 
         try {
             while(currentPage <= limitPage) {
-                val response: List<CryptocurrencyPrice> = api.list(currentPage, limitPage)
+                val response: List<CryptocurrencyPrice> = api.list(currentPage, limitPage, "brl")
                 results.addAll(response)
                 currentPage++
             }

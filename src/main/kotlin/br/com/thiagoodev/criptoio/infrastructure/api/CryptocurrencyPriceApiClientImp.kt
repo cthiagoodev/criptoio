@@ -1,4 +1,4 @@
-package br.com.thiagoodev.criptoio.infrastructure.data
+package br.com.thiagoodev.criptoio.infrastructure.api
 
 import br.com.thiagoodev.criptoio.domain.value_objects.CryptocurrencyApiFilter
 import br.com.thiagoodev.criptoio.domain.value_objects.CryptocurrencyPrice

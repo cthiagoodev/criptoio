@@ -1,5 +1,6 @@
 package br.com.thiagoodev.criptoio.domain.entities
 
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -18,6 +19,7 @@ class Cryptocurrency(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     val uuid: UUID = UUID.randomUUID(),
+    @Column(unique = true)
     @field:NotBlank(message = "Symbol cannot be blank")
     val symbol: String,
     @field:NotBlank(message = "Name cannot be blank")

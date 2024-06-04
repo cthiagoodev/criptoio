@@ -26,13 +26,13 @@ class CryptocurrencyPriceApiClientImp : CryptocurrencyPriceApiClient {
     private val logger: Logger = Logger.getLogger("CryptocurrencyPriceApiClientLogger")
 
     override fun list(page: Int, limit: Int, base: String): List<CryptocurrencyPrice> {
-        val url = "${baseUrl}/api/v3/coins/markets?page=${page}&limit=${limit}&vs_currency=${base}"
+        val url = "${baseUrl}/api/v3/coins/markets?vs_currency=$base&page=$page&per_page=$limit"
 
         try {
             val client = WebClient.builder()
                 .baseUrl(url)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .defaultHeader("x-cg-pro-api-key", apiKey)
+//                .defaultHeader("x-cg-pro-api-key", apiKey)
                 .build()
 
             val result: String? = client

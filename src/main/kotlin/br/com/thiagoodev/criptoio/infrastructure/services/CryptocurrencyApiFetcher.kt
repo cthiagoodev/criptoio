@@ -12,21 +12,12 @@ class CryptocurrencyApiFetcher(
     private val api: CryptocurrencyPriceApiClient,
 ) {
     fun extract() {
-        val limitPage = 50
-        var currentPage = 1
-        val results: MutableList<CryptocurrencyPrice> = mutableListOf()
-
         try {
-            while(currentPage <= limitPage) {
-                val response: List<CryptocurrencyPrice> = api.list(currentPage, limitPage, "brl")
-                results.addAll(response)
-                currentPage++
-            }
-
-            val cryptos: List<Cryptocurrency> = results.map(::parseToCryptocurrency)
+            val response: List<CryptocurrencyPrice> = api.list(1, 50, "brl")
+            val cryptos: List<Cryptocurrency> = response.map(::parseToCryptocurrency)
             repository.saveAll(cryptos)
         } catch(error: Exception) {
-
+            println(error)
         }
     }
 

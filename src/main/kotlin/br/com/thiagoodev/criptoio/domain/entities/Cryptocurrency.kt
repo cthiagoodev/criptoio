@@ -9,6 +9,7 @@ import jakarta.persistence.Table
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
 import org.springframework.data.annotation.CreatedDate
+import org.springframework.data.annotation.LastModifiedDate
 import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.util.UUID
@@ -25,7 +26,9 @@ class Cryptocurrency(
     @field:NotBlank(message = "Name cannot be blank")
     val name: String,
     @CreatedDate
-    val createdDate: LocalDateTime = LocalDateTime.now(),
+    val created: LocalDateTime = LocalDateTime.now(),
+    @LastModifiedDate
+    val modified: LocalDateTime = LocalDateTime.now(),
     @field:Min(value = 1, message = "Total supply must be a positive number")
     val totalSupply: BigDecimal,
     @field:Min(value = 0, message = "Current price cannot be negative")

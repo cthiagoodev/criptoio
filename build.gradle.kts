@@ -33,6 +33,7 @@ dependencies {
 	testImplementation("org.springframework.security:spring-security-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	implementation("org.springframework.boot:spring-boot-starter-validation:3.3.0")
+	implementation("org.springframework.boot:spring-boot-starter-webflux:3.3.0")
 }
 
 tasks.withType<KotlinCompile> {

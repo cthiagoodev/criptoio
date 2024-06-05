@@ -18,15 +18,11 @@ class CryptocurrencyFetcherTask(
     private val logger = Logger.getLogger("CryptocurrencyFetcherTaskException")
 
     @Scheduled(fixedRate = 300000)
-    fun findData() {
+    fun findDataAndSave() {
         try {
             val response: ExtractionResult = fetcher.extract()
-
             if(response is ExtractionResult.Success<*>) {
                 repository.saveAll(response.result as List<Cryptocurrency>)
-            } else {
-                val error = (response as ExtractionResult.Error).error
-                logger.log(Level.WARNING, error.message)
             }
         } catch(error: PersistenceException) {
             logger.log(Level.SEVERE, error.message)

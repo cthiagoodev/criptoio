@@ -11,9 +11,7 @@ import java.util.logging.Level
 import java.util.logging.Logger
 
 @Service
-class CryptocurrencyApiFetcher(
-    private val api: CryptocurrencyPriceApiClient,
-) {
+class CryptocurrencyApiFetcher(private val api: CryptocurrencyPriceApiClient) {
     private val logger: Logger = Logger.getLogger("CryptocurrencyApiFetcherLogger")
 
     fun extract(): ExtractionResult {

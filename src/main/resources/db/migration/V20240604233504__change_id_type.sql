@@ -1,0 +1,2 @@
+ALTER TABLE cryptocurrency
+ALTER COLUMN id TYPE VARCHAR(255)

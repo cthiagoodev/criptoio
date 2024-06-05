@@ -15,6 +15,7 @@ class CryptocurrencyApiFetcher(
         try {
             val response: List<CryptocurrencyPrice> = api.list(1, 50, "brl")
             val cryptos: List<Cryptocurrency> = response.map(::parseToCryptocurrency)
+
             repository.saveAll(cryptos)
         } catch(error: Exception) {
             println(error)
@@ -23,6 +24,7 @@ class CryptocurrencyApiFetcher(
 
     private fun parseToCryptocurrency(value: CryptocurrencyPrice): Cryptocurrency {
         return Cryptocurrency(
+            id = Cryptocurrency.generateId(value.id),
             symbol = value.symbol,
             name = value.name,
             logo = value.image,

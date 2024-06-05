@@ -3,6 +3,7 @@ package br.com.thiagoodev.criptoio.domain.value_objects
 import java.math.BigDecimal
 
 data class CryptocurrencyPrice(
+    val id: String,
     val symbol: String,
     val name: String,
     val image: String,

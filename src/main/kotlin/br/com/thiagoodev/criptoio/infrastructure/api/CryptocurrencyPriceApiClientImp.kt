@@ -51,6 +51,7 @@ class CryptocurrencyPriceApiClientImp : CryptocurrencyPriceApiClient {
 
             return data.map {
                  CryptocurrencyPrice(
+                    id = it["id"].asText(),
                     symbol = it["symbol"].asText(),
                     name = it["name"].asText(),
                     image = it["image"].asText(),

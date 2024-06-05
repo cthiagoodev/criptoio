@@ -45,4 +45,11 @@ class Cryptocurrency(
             return String(base64, Charsets.UTF_8)
         }
     }
+
+    fun toCryptocurrencyVariationPrice(): CryptoVariationPrice {
+        return CryptoVariationPrice(
+            cryptocurrency = this,
+            price = currentPrice,
+        )
+    }
 }

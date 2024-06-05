@@ -1,6 +1,7 @@
 package br.com.thiagoodev.criptoio.domain.entities
 
 import jakarta.persistence.*
+import jakarta.validation.constraints.Min
 import org.springframework.data.annotation.CreatedDate
 import java.math.BigDecimal
 import java.time.LocalDateTime
@@ -15,6 +16,7 @@ class CryptoVariationPrice(
     @ManyToOne
     @JoinColumn(name = "cryptocurrency_id")
     val cryptocurrency: Cryptocurrency,
+    @field:Min(value = 0, message = "You cannot enter a value less than 0")
     val price: BigDecimal,
     @CreatedDate
     val created: LocalDateTime = LocalDateTime.now(),

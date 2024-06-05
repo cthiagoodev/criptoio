@@ -17,7 +17,7 @@ class CryptocurrencyApiFetcher(private val api: CryptocurrencyPriceApiClient) {
     fun extract(): ExtractionResult {
         try {
             val response: List<CryptocurrencyPrice> = api.list(1, 50, "brl")
-            val cryptos: List<Cryptocurrency> = response.map(::parseToCryptocurrency)
+            val cryptos: List<Cryptocurrency> = response.map { it.toCryptocurrency() }
             return ExtractionResult.Success(cryptos)
         } catch(error: BadRequestException) {
             logger.log(Level.WARNING, error.message)
@@ -29,16 +29,5 @@ class CryptocurrencyApiFetcher(private val api: CryptocurrencyPriceApiClient) {
             logger.log(Level.WARNING, error.message)
             return ExtractionResult.Error(Exception("Error on extract API: ${error.message}"))
         }
-    }
-
-    private fun parseToCryptocurrency(value: CryptocurrencyPrice): Cryptocurrency {
-        return Cryptocurrency(
-            id = Cryptocurrency.generateId(value.id),
-            symbol = value.symbol,
-            name = value.name,
-            logo = value.image,
-            currentPrice = value.currentPrice,
-            totalSupply = value.totalSupply,
-        )
     }
 }

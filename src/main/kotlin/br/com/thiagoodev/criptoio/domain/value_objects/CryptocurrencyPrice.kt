@@ -1,5 +1,6 @@
 package br.com.thiagoodev.criptoio.domain.value_objects
 
+import br.com.thiagoodev.criptoio.domain.entities.Cryptocurrency
 import java.math.BigDecimal
 
 data class CryptocurrencyPrice(
@@ -13,4 +14,15 @@ data class CryptocurrencyPrice(
     val priceChangePercentage24h: BigDecimal,
     val totalSupply: BigDecimal,
     val lastUpdated: String
-)
+) {
+    fun toCryptocurrency(): Cryptocurrency {
+        return Cryptocurrency(
+            id = Cryptocurrency.generateId(id),
+            symbol = symbol,
+            name = name,
+            logo = image,
+            currentPrice = currentPrice,
+            totalSupply = totalSupply,
+        )
+    }
+}

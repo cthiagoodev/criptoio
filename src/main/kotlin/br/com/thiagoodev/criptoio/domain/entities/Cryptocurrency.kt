@@ -1,8 +1,10 @@
 package br.com.thiagoodev.criptoio.domain.entities
 
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
@@ -34,6 +36,8 @@ class Cryptocurrency(
     val currentPrice: BigDecimal,
     @field:NotBlank(message = "Logo URL cannot be blank")
     val logo: String,
+    @OneToMany(mappedBy = "cryptocurrency", cascade = [CascadeType.ALL])
+    val history: List<CryptoVariationPrice> = emptyList(),
 ) {
     companion object {
         fun generateId(key: String): String {

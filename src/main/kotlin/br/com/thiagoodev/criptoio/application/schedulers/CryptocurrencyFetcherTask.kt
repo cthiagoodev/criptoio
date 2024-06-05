@@ -15,7 +15,7 @@ class CryptocurrencyFetcherTask(
     private val fetcher: CryptocurrencyApiFetcher,
     private val repository: JpaCryptocurrencyRepository,
 ) {
-    private val logger = Logger.getLogger("PersistenceCryptocurrencyException")
+    private val logger = Logger.getLogger("CryptocurrencyFetcherTaskException")
 
     @Scheduled(fixedRate = 300000)
     fun findData() {

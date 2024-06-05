@@ -12,8 +12,6 @@ import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
-import java.util.logging.Level
-import java.util.logging.Logger
 
 @Service
 class CryptocurrencyPriceApiClientImp : CryptocurrencyPriceApiClient {
@@ -22,8 +20,6 @@ class CryptocurrencyPriceApiClientImp : CryptocurrencyPriceApiClient {
 
     @Value("\${api.key}")
     private lateinit var apiKey: String
-
-    private val logger: Logger = Logger.getLogger("CryptocurrencyPriceApiClientLogger")
 
     override fun list(page: Int, limit: Int, base: String): List<CryptocurrencyPrice> {
         val url = "${baseUrl}/api/v3/coins/markets?vs_currency=$base&page=$page&per_page=$limit"
@@ -64,14 +60,11 @@ class CryptocurrencyPriceApiClientImp : CryptocurrencyPriceApiClient {
                 )
             }
         } catch(error: WebClientResponseException) {
-            logger.log(Level.WARNING, error.message)
-
             throw when(error.statusCode) {
                 HttpStatus.BAD_REQUEST -> BadRequestException(error.message)
                 else -> InternalServerException(error.message)
             }
         } catch(error: Exception) {
-            logger.log(Level.WARNING, error.message)
             throw error
         }
     }

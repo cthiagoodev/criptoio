@@ -1,5 +1,6 @@
 package br.com.thiagoodev.criptoio.domain.entities
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -36,6 +37,7 @@ class Cryptocurrency(
     val currentPrice: BigDecimal,
     @field:NotBlank(message = "Logo URL cannot be blank")
     val logo: String,
+    @JsonIgnoreProperties(value = ["cryptocurrency"])
     @OneToMany(mappedBy = "cryptocurrency", cascade = [CascadeType.ALL])
     val history: List<CryptoVariationPrice> = emptyList(),
 ) {

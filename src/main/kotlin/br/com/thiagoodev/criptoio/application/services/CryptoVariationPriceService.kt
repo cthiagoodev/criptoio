@@ -22,4 +22,8 @@ class CryptoVariationPriceService(
 
         return repository.findByCryptocurrencyId(id)
     }
+
+    fun saveAll(values: List<CryptoVariationPrice>): List<CryptoVariationPrice> {
+        return repository.saveAll(values)
+    }
 }

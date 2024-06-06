@@ -12,15 +12,17 @@ import java.util.UUID
 @Table(name = "crypto_variation_price")
 class CryptoVariationPrice(
     @Id
-    @field:GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.UUID)
     val uuid: UUID = UUID.randomUUID(),
-    @ManyToOne
 
+    @ManyToOne
     @JsonIgnoreProperties(value = ["history", "currentPrice"])
     @JoinColumn(name = "cryptocurrency_id")
     val cryptocurrency: Cryptocurrency,
+
     @field:Min(value = 0, message = "You cannot enter a value less than 0")
     val price: BigDecimal,
+
     @CreatedDate
     val created: LocalDateTime = LocalDateTime.now(),
 )

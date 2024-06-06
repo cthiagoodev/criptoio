@@ -21,22 +21,30 @@ import java.util.Base64
 class Cryptocurrency(
     @Id
     val id: String,
+
     @NaturalId
     @Column(unique = true)
     @field:NotBlank(message = "Symbol cannot be blank")
     val symbol: String,
+
     @field:NotBlank(message = "Name cannot be blank")
     val name: String,
+
     @CreatedDate
     val created: LocalDateTime = LocalDateTime.now(),
+
     @LastModifiedDate
     val modified: LocalDateTime = LocalDateTime.now(),
+
     @field:Min(value = 1, message = "Total supply must be a positive number")
     val totalSupply: BigDecimal,
+
     @field:Min(value = 0, message = "Current price cannot be negative")
     val currentPrice: BigDecimal,
+
     @field:NotBlank(message = "Logo URL cannot be blank")
     val logo: String,
+
     @JsonIgnoreProperties(value = ["cryptocurrency"])
     @OneToMany(mappedBy = "cryptocurrency", cascade = [CascadeType.ALL])
     val history: List<CryptoVariationPrice> = emptyList(),

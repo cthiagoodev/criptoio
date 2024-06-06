@@ -17,7 +17,7 @@ CriptoIO é uma poderosa e confiável API RESTful construída com Kotlin e Sprin
 1. Clone o repositório:
 
     ```bash
-    git clone https://github.com/<seu-nome-de-usuário>/criptoio.git
+    git clone git@github.com:cthiagoodev/criptoio.git
     ```
 
 2. Configure o ambiente:

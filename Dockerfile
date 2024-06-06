@@ -1,3 +1,5 @@
+RUN ./gradlew build
+
 FROM openjdk:21-jdk
 VOLUME /tmp
 ARG JAR_FILE

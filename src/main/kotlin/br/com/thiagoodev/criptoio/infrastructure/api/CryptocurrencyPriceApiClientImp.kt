@@ -18,9 +18,6 @@ class CryptocurrencyPriceApiClientImp : CryptocurrencyPriceApiClient {
     @Value("\${api.base.url}")
     private lateinit var baseUrl: String
 
-    @Value("\${api.key}")
-    private lateinit var apiKey: String
-
     override fun list(page: Int, limit: Int, base: String): List<CryptocurrencyPrice> {
         val url = "${baseUrl}/api/v3/coins/markets?vs_currency=$base&page=$page&per_page=$limit"
 
@@ -28,7 +25,6 @@ class CryptocurrencyPriceApiClientImp : CryptocurrencyPriceApiClient {
             val client = WebClient.builder()
                 .baseUrl(url)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-//                .defaultHeader("x-cg-pro-api-key", apiKey)
                 .build()
 
             val result: String? = client

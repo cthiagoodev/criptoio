@@ -1,5 +1,6 @@
 package br.com.thiagoodev.criptoio.domain.entities
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import jakarta.persistence.*
 import jakarta.validation.constraints.Min
 import org.springframework.data.annotation.CreatedDate
@@ -14,6 +15,7 @@ class CryptoVariationPrice(
     @field:GeneratedValue(strategy = GenerationType.UUID)
     val uuid: UUID = UUID.randomUUID(),
     @ManyToOne
+    @JsonIgnoreProperties(value = ["history", "currentPrice"])
     @JoinColumn(name = "cryptocurrency_id")
     val cryptocurrency: Cryptocurrency,
     @field:Min(value = 0, message = "You cannot enter a value less than 0")

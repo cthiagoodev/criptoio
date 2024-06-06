@@ -2,8 +2,8 @@ package br.com.thiagoodev.criptoio.infrastructure.api
 
 import br.com.thiagoodev.criptoio.domain.exceptions.BadRequestException
 import br.com.thiagoodev.criptoio.domain.exceptions.InternalServerException
-import br.com.thiagoodev.criptoio.domain.value_objects.CryptocurrencyApiFilter
 import br.com.thiagoodev.criptoio.domain.value_objects.CryptocurrencyPrice
+import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
@@ -33,28 +33,29 @@ class CryptocurrencyPriceApiClientImp : CryptocurrencyPriceApiClient {
                 .bodyToMono(String::class.java)
                 .block()
 
-            if(result == null) {
-                return emptyList()
+            result?.let {
+                val mapper = ObjectMapper()
+                val json: JsonNode = mapper.readTree(it)
+                val data: Iterable<JsonNode> = json.asIterable()
+
+                return data.map { node ->
+                     CryptocurrencyPrice(
+                        id = node["id"].asText(),
+                        symbol = node["symbol"].asText(),
+                        name = node["name"].asText(),
+                        image = node["image"].asText(),
+                        priceChange24h = node["price_change_24h"].asDouble().toBigDecimal(),
+                        currentPrice = node["current_price"].asDouble().toBigDecimal(),
+                        priceChangePercentage24h = node["price_change_percentage_24h"].asDouble().toBigDecimal(),
+                        lastUpdated = node["last_updated"].asText(),
+                        totalSupply = node["total_supply"].asDouble().toBigDecimal(),
+                        totalVolume = node["total_volume"].asDouble().toBigDecimal(),
+                    )
+                }
             }
 
-            val mapper = ObjectMapper()
-            val json = mapper.readTree(result)
-            val data = json.asIterable()
+            return emptyList()
 
-            return data.map {
-                 CryptocurrencyPrice(
-                    id = it["id"].asText(),
-                    symbol = it["symbol"].asText(),
-                    name = it["name"].asText(),
-                    image = it["image"].asText(),
-                    priceChange24h = it["price_change_24h"].asDouble().toBigDecimal(),
-                    currentPrice = it["current_price"].asDouble().toBigDecimal(),
-                    priceChangePercentage24h = it["price_change_percentage_24h"].asDouble().toBigDecimal(),
-                    lastUpdated = it["last_updated"].asText(),
-                    totalSupply = it["total_supply"].asDouble().toBigDecimal(),
-                    totalVolume = it["total_volume"].asDouble().toBigDecimal(),
-                )
-            }
         } catch(error: WebClientResponseException) {
             throw when(error.statusCode) {
                 HttpStatus.BAD_REQUEST -> BadRequestException(error.message)
@@ -63,9 +64,5 @@ class CryptocurrencyPriceApiClientImp : CryptocurrencyPriceApiClient {
         } catch(error: Exception) {
             throw error
         }
-    }
-
-    override fun list(filter: CryptocurrencyApiFilter): List<CryptocurrencyPrice> {
-        TODO("Not yet implemented")
     }
 }

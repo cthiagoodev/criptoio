@@ -9,4 +9,8 @@ class CryptoVariationPriceService(private val repository: JpaCryptoVariationPric
     fun getAll(): List<CryptoVariationPrice> {
         return repository.findAll()
     }
+
+    fun findByCryptocurrencyId(id: String): List<CryptoVariationPrice> {
+        return repository.findByCryptocurrencyId(id)
+    }
 }

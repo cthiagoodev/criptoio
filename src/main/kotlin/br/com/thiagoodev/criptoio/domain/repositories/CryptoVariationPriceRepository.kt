@@ -1,5 +1,7 @@
 package br.com.thiagoodev.criptoio.domain.repositories
 
-interface CryptoVariationPriceRepository {
+import br.com.thiagoodev.criptoio.domain.entities.CryptoVariationPrice
 
+interface CryptoVariationPriceRepository {
+    fun findByCryptocurrencyId(id: String): List<CryptoVariationPrice>
 }

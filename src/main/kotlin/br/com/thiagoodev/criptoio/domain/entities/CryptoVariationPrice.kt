@@ -15,7 +15,7 @@ class CryptoVariationPrice(
     @field:GeneratedValue(strategy = GenerationType.UUID)
     val uuid: UUID = UUID.randomUUID(),
     @ManyToOne
-    @JsonIgnoreProperties(value = ["history"])
+    @JsonIgnoreProperties(value = ["history", "currentPrice"])
     @JoinColumn(name = "cryptocurrency_id")
     val cryptocurrency: Cryptocurrency,
     @field:Min(value = 0, message = "You cannot enter a value less than 0")

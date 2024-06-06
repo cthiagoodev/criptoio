@@ -1,7 +1,6 @@
 package br.com.thiagoodev.criptoio.application.controllers
 
 import br.com.thiagoodev.criptoio.domain.exceptions.CryptocurrencyNotExistsException
-import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.ProblemDetail
@@ -25,11 +24,15 @@ class ExceptionHandlerController : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(RuntimeException::class)
     fun genericRuntimeException(error: RuntimeException, request: WebRequest): ResponseEntity<Any>? {
-        return handleExceptionInternal(error, error.message, HttpHeaders(), HttpStatus.BAD_REQUEST, request)
+        val status: HttpStatusCode = HttpStatusCode.valueOf(HttpStatus.BAD_REQUEST.value())
+        val detail = ProblemDetail.forStatusAndDetail(status, error.message)
+        return ResponseEntity.of(detail).build()
     }
 
     @ExceptionHandler(Exception::class)
     fun genericException(error: Exception, request: WebRequest): ResponseEntity<Any>? {
-        return handleExceptionInternal(error, error.message, HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request)
+        val status: HttpStatusCode = HttpStatusCode.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value())
+        val detail = ProblemDetail.forStatusAndDetail(status, error.message)
+        return ResponseEntity.of(detail).build()
     }
 }

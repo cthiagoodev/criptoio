@@ -9,4 +9,8 @@ class CryptocurrencyService(private val repository: JpaCryptocurrencyRepository)
     fun getAll(): List<Cryptocurrency> {
         return repository.findAll()
     }
+
+    fun saveAll(values: List<Cryptocurrency>): List<Cryptocurrency> {
+        return repository.saveAll(values)
+    }
 }

@@ -34,6 +34,8 @@ dependencies {
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	implementation("org.springframework.boot:spring-boot-starter-validation:3.3.0")
 	implementation("org.springframework.boot:spring-boot-starter-webflux:3.3.0")
+	implementation("org.postgresql:postgresql:42.7.3")
+	implementation("me.paulschwarz:spring-dotenv:4.0.0")
 }
 
 tasks.withType<KotlinCompile> {

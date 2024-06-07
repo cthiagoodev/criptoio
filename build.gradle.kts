@@ -36,6 +36,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-webflux:3.3.0")
 	implementation("org.postgresql:postgresql:42.7.3")
 	implementation("me.paulschwarz:spring-dotenv:4.0.0")
+	implementation("io.jsonwebtoken:jjwt:0.12.5")
 }
 
 tasks.withType<KotlinCompile> {

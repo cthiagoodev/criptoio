@@ -20,6 +20,8 @@ class JwtService {
     @Value("\${security.jwt.expiration}")
     private val expiration: Long = 0
 
+    fun getExpiration(): Long = expiration
+
     private fun buildKey(): SecretKey {
         val bytes: ByteArray = Base64URL.from(secretKey).decode()
         return Keys.hmacShaKeyFor(bytes)

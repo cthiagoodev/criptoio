@@ -1,5 +1,6 @@
 package br.com.thiagoodev.criptoio.domain.entities
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -29,6 +30,7 @@ class User(
     @field:Email(message = "Please provide a valid email address.")
     val email: String,
 
+    @JsonIgnore
     @field:NotBlank(message = "You need to provide a password.")
     @field:Min(value = 4, message = "Password must be at least 4 characters long.")
     private val password: String,

@@ -4,19 +4,17 @@ import br.com.thiagoodev.criptoio.application.dtos.RegisterDto
 import br.com.thiagoodev.criptoio.domain.entities.User
 import br.com.thiagoodev.criptoio.infrastructure.repositories.JpaUserRepository
 import br.com.thiagoodev.criptoio.infrastructure.services.JwtService
-import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 
 @Service
 class UserService(
-    private val userDetailsService: UserDetailsService,
     private val jpaUserRepository: JpaUserRepository,
     private val encoder: BCryptPasswordEncoder,
     private val jwtService: JwtService,
 ) {
     fun findByEmail(email: String): User {
-        return userDetailsService.loadUserByUsername(email) as User
+        return jpaUserRepository.findByEmail(email)
     }
 
     fun create(form: RegisterDto): User {
@@ -27,6 +25,7 @@ class UserService(
             cpf = form.cpf,
             dateOfBirth = form.dateOfBirth,
         )
+
         return jpaUserRepository.save(user)
     }
 }

@@ -10,9 +10,11 @@ import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.stereotype.Service
 import java.util.*
 import javax.crypto.SecretKey
 
+@Service
 class JwtService {
     @Value("\${security.jwt.secret-key}")
     private lateinit var secretKey: String

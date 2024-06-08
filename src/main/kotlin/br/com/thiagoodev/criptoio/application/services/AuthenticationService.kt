@@ -8,12 +8,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
-import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Service
 
 @Service
 class AuthenticationService(
-    private val userDetailsService: UserDetailsService,
+    private val userService: UserService,
     private val authenticationManager: AuthenticationManager,
     private val jwtService: JwtService,
 ) {
@@ -27,7 +26,7 @@ class AuthenticationService(
             throw Exception()
         }
 
-        val user: UserDetails = userDetailsService.loadUserByUsername(form.email)
+        val user: UserDetails = userService.findByEmail(form.email)
         val token: String = jwtService.buildToken(user)
         val expiration: Long = jwtService.getExpiration()
 

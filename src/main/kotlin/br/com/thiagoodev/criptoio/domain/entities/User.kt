@@ -9,6 +9,7 @@ import jakarta.persistence.Table
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.security.core.GrantedAuthority
@@ -39,7 +40,7 @@ class User(
     @field:Min(value = 11, message = "CPF must be at least 11 characters long.")
     val cpf: String,
 
-    @field:NotBlank(message = "You need to provide your date of birth.")
+    @field:NotNull(message = "You need to provide your date of birth.")
     val dateOfBirth: LocalDateTime,
 
     @CreatedDate

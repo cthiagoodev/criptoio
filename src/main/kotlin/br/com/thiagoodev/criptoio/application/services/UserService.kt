@@ -2,10 +2,12 @@ package br.com.thiagoodev.criptoio.application.services
 
 import br.com.thiagoodev.criptoio.application.dtos.RegisterDto
 import br.com.thiagoodev.criptoio.domain.entities.User
+import br.com.thiagoodev.criptoio.domain.exceptions.ValidationException
 import br.com.thiagoodev.criptoio.infrastructure.repositories.JpaUserRepository
 import br.com.thiagoodev.criptoio.infrastructure.services.JwtService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.TransactionSystemException
 
 @Service
 class UserService(
@@ -26,6 +28,12 @@ class UserService(
             dateOfBirth = form.dateOfBirth,
         )
 
-        return jpaUserRepository.save(user)
+        try {
+            return jpaUserRepository.save(user)
+        } catch(error: TransactionSystemException) {
+            throw ValidationException(error.message)
+        } catch(error: Exception) {
+            throw error
+        }
     }
 }

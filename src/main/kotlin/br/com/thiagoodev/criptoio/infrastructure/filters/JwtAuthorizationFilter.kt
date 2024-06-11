@@ -24,13 +24,13 @@ class JwtAuthorizationFilter(
         response: HttpServletResponse,
         filterChain: FilterChain,
     ) {
+        val authorizationHeader: String? = request.getHeader("Authorization")
+
+        if(authorizationHeader == null || !authorizationHeader.startsWith("Bearer")) {
+            return filterChain.doFilter(request, response)
+        }
+
         try {
-            val authorizationHeader: String? = request.getHeader("Authorization")
-
-            if(authorizationHeader == null || !authorizationHeader.startsWith("Bearer")) {
-                return filterChain.doFilter(request, response)
-            }
-
             val isNotAuthenticated: Boolean = SecurityContextHolder.getContext().authentication == null
 
             if(isNotAuthenticated) {

@@ -1,6 +1,7 @@
 package br.com.thiagoodev.criptoio.application.controllers
 
 import br.com.thiagoodev.criptoio.domain.exceptions.CryptocurrencyNotExistsException
+import br.com.thiagoodev.criptoio.domain.exceptions.ValidationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.ProblemDetail
@@ -12,6 +13,16 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 class ExceptionHandlerController : ResponseEntityExceptionHandler() {
+    @ExceptionHandler(ValidationException::class)
+    fun validationException(
+        error: ValidationException,
+        request: WebRequest,
+    ): ResponseEntity<Any>? {
+        val status: HttpStatusCode = HttpStatusCode.valueOf(HttpStatus.CONFLICT.value())
+        val detail = ProblemDetail.forStatusAndDetail(status, error.message)
+        return ResponseEntity.of(detail).build()
+    }
+
     @ExceptionHandler(CryptocurrencyNotExistsException::class)
     fun cryptocurrencyNotFoundException(
         error: CryptocurrencyNotExistsException,

@@ -20,6 +20,10 @@ class UserService(
     }
 
     fun create(form: RegisterDto): User {
+        if(!form.validate()) {
+            throw ValidationException("The information you have provided is invalid")
+        }
+
         val user = User(
             name = form.name,
             email = form.email,

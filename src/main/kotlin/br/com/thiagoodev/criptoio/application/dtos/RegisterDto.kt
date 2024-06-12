@@ -4,7 +4,6 @@ import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 data class RegisterDto(
     @field:NotBlank(message = "Name must not be blank")
@@ -24,9 +23,5 @@ data class RegisterDto(
                 email.isNotEmpty() &&
                 password.isNotEmpty() &&
                 cpf.isNotEmpty()
-    }
-
-    fun getDateOfBirthFormatted(): LocalDateTime {
-        return LocalDateTime.parse(dateOfBirth.toString(), DateTimeFormatter.ISO_DATE_TIME)
     }
 }

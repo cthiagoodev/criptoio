@@ -20,7 +20,7 @@ class CryptocurrencyFetcherTask(
 ) {
     private val logger = Logger.getLogger("CryptocurrencyFetcherTaskException")
 
-    @Scheduled(fixedRate = 300000)
+    @Scheduled(fixedRate = 86400000)
     fun findDataAndSave() {
         try {
             val response: ExtractionResult = fetcher.extract()

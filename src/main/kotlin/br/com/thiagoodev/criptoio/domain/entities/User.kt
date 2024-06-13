@@ -14,6 +14,7 @@ import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -33,15 +34,15 @@ class User(
 
     @JsonIgnore
     @field:NotBlank(message = "You need to provide a password.")
-    @field:Min(value = 4, message = "Password must be at least 4 characters long.")
+    @field:Min(value = 4, message = "CPF must be at least 11 characters long.")
     private val password: String,
 
     @field:NotBlank(message = "You need to provide your CPF.")
     @field:Min(value = 11, message = "CPF must be at least 11 characters long.")
-    val cpf: String,
+    val cpf: Int,
 
     @field:NotNull(message = "You need to provide your date of birth.")
-    val dateOfBirth: LocalDateTime,
+    val dateOfBirth: LocalDate,
 
     @CreatedDate
     val created: LocalDateTime = LocalDateTime.now(),

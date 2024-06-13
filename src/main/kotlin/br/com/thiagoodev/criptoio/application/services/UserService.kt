@@ -29,7 +29,7 @@ class UserService(
             email = form.email,
             password = encoder.encode(form.password),
             cpf = form.cpf,
-            dateOfBirth = form.dateOfBirth,
+            dateOfBirth = form.dateOfBirth.toLocalDate(),
         )
 
         try {

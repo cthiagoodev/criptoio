@@ -13,8 +13,7 @@ data class RegisterDto(
     val email: String,
     @field:NotBlank(message = "Password must not be blank")
     val password: String,
-    @field:NotBlank(message = "CPF must not be blank")
-    val cpf: String,
+    val cpf: Int,
     @field:NotNull(message = "Date of birth must not be blank")
     val dateOfBirth: LocalDateTime,
 ) {
@@ -22,6 +21,6 @@ data class RegisterDto(
         return name.isNotEmpty() &&
                 email.isNotEmpty() &&
                 password.isNotEmpty() &&
-                cpf.isNotEmpty()
+                cpf > 0
     }
 }

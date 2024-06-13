@@ -2,9 +2,11 @@ package br.com.thiagoodev.criptoio.application.services
 
 import br.com.thiagoodev.criptoio.application.dtos.RegisterDto
 import br.com.thiagoodev.criptoio.domain.entities.User
+import br.com.thiagoodev.criptoio.domain.exceptions.DataConflictException
 import br.com.thiagoodev.criptoio.domain.exceptions.ValidationException
 import br.com.thiagoodev.criptoio.infrastructure.repositories.JpaUserRepository
 import br.com.thiagoodev.criptoio.infrastructure.services.JwtService
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.TransactionSystemException
@@ -36,6 +38,9 @@ class UserService(
             return jpaUserRepository.save(user)
         } catch(error: TransactionSystemException) {
             throw ValidationException(error.message)
+        } catch(error: DataIntegrityViolationException) {
+            val message: String? = error.cause?.cause?.message
+            throw DataConflictException(message)
         } catch(error: Exception) {
             throw error
         }

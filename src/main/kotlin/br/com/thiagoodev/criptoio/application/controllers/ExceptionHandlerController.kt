@@ -1,6 +1,7 @@
 package br.com.thiagoodev.criptoio.application.controllers
 
 import br.com.thiagoodev.criptoio.domain.exceptions.CryptocurrencyNotExistsException
+import br.com.thiagoodev.criptoio.domain.exceptions.DataConflictException
 import br.com.thiagoodev.criptoio.domain.exceptions.ValidationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
@@ -13,9 +14,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 class ExceptionHandlerController : ResponseEntityExceptionHandler() {
-    @ExceptionHandler(ValidationException::class)
+    @ExceptionHandler(
+        ValidationException::class,
+        DataConflictException::class,
+    )
     fun validationException(
-        error: ValidationException,
+        error: Exception,
         request: WebRequest,
     ): ResponseEntity<Any>? {
         val status: HttpStatusCode = HttpStatusCode.valueOf(HttpStatus.CONFLICT.value())

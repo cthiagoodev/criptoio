@@ -2,6 +2,7 @@ package br.com.thiagoodev.criptoio.application.controllers
 
 import br.com.thiagoodev.criptoio.domain.exceptions.CryptocurrencyNotExistsException
 import br.com.thiagoodev.criptoio.domain.exceptions.DataConflictException
+import br.com.thiagoodev.criptoio.domain.exceptions.InvalidUserTokenException
 import br.com.thiagoodev.criptoio.domain.exceptions.ValidationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
@@ -27,9 +28,12 @@ class ExceptionHandlerController : ResponseEntityExceptionHandler() {
         return ResponseEntity.of(detail).build()
     }
 
-    @ExceptionHandler(CryptocurrencyNotExistsException::class)
+    @ExceptionHandler(
+        CryptocurrencyNotExistsException::class,
+        InvalidUserTokenException::class,
+    )
     fun cryptocurrencyNotFoundException(
-        error: CryptocurrencyNotExistsException,
+        error: Exception,
         request: WebRequest,
     ): ResponseEntity<Any>? {
         val status: HttpStatusCode = HttpStatusCode.valueOf(HttpStatus.NOT_FOUND.value())

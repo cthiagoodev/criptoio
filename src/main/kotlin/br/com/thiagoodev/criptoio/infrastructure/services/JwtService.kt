@@ -74,7 +74,7 @@ class JwtService {
     }
 
     private fun extractToken(token: String): String? {
-        val regex = "Bearer\\\\s([A-Za-z0-9-_]+\\\\.[A-Za-z0-9-_]+\\\\.[A-Za-z0-9-_]+)".toRegex()
+        val regex = "\\b[A-Za-z0-9-_]+\\.[A-Za-z0-9-_]+\\.[A-Za-z0-9-_]+\\b".toRegex()
         return regex.find(token)?.value
     }
 }

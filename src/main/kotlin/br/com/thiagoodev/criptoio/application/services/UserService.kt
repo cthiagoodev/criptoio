@@ -3,6 +3,7 @@ package br.com.thiagoodev.criptoio.application.services
 import br.com.thiagoodev.criptoio.application.dtos.RegisterDto
 import br.com.thiagoodev.criptoio.domain.entities.User
 import br.com.thiagoodev.criptoio.domain.exceptions.DataConflictException
+import br.com.thiagoodev.criptoio.domain.exceptions.InvalidUserTokenException
 import br.com.thiagoodev.criptoio.domain.exceptions.ValidationException
 import br.com.thiagoodev.criptoio.infrastructure.repositories.JpaUserRepository
 import br.com.thiagoodev.criptoio.infrastructure.services.JwtService
@@ -21,9 +22,18 @@ class UserService(
         return jpaUserRepository.findByEmail(email)
     }
 
+    fun me(token: String): User {
+        val email: String = jwtService.getSubject(token) ?: throw InvalidUserTokenException()
+        return findByEmail(email)
+    }
+
     fun create(form: RegisterDto): User {
         if(!form.validate()) {
             throw ValidationException("The information you have provided is invalid")
+        }
+
+        if(!form.validateCpf()) {
+            throw ValidationException("The provided CPF is invalid.")
         }
 
         val user = User(

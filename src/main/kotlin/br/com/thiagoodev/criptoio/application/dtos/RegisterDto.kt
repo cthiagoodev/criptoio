@@ -24,4 +24,9 @@ data class RegisterDto(
                 password.isNotEmpty() &&
                 cpf.isNotEmpty()
     }
+
+    fun validateCpf(): Boolean {
+        val regex = Regex("^[0-9]{11}$")
+        return regex.matches(cpf)
+    }
 }

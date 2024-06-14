@@ -1,19 +1,20 @@
 package br.com.thiagoodev.criptoio.application.controllers
 
-import br.com.thiagoodev.criptoio.domain.exceptions.CryptocurrencyNotExistsException
-import br.com.thiagoodev.criptoio.domain.exceptions.DataConflictException
-import br.com.thiagoodev.criptoio.domain.exceptions.InvalidUserTokenException
-import br.com.thiagoodev.criptoio.domain.exceptions.ValidationException
+import br.com.thiagoodev.criptoio.domain.exceptions.*
+import io.jsonwebtoken.ExpiredJwtException
+import io.jsonwebtoken.MalformedJwtException
+import io.jsonwebtoken.UnsupportedJwtException
+import io.jsonwebtoken.security.SignatureException
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.ProblemDetail
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 
-@ControllerAdvice
+@RestControllerAdvice
 class ExceptionHandlerController : ResponseEntityExceptionHandler() {
     @ExceptionHandler(
         ValidationException::class,
@@ -28,15 +29,39 @@ class ExceptionHandlerController : ResponseEntityExceptionHandler() {
         return ResponseEntity.of(detail).build()
     }
 
-    @ExceptionHandler(
-        CryptocurrencyNotExistsException::class,
-        InvalidUserTokenException::class,
-    )
-    fun cryptocurrencyNotFoundException(
+    @ExceptionHandler(CryptocurrencyNotExistsException::class)
+    fun cryptocurrencyException(
         error: Exception,
         request: WebRequest,
     ): ResponseEntity<Any>? {
         val status: HttpStatusCode = HttpStatusCode.valueOf(HttpStatus.NOT_FOUND.value())
+        val detail = ProblemDetail.forStatusAndDetail(status, error.message)
+        return ResponseEntity.of(detail).build()
+    }
+
+    @ExceptionHandler(
+        SignatureException::class,
+        MalformedJwtException::class,
+        ExpiredJwtException::class,
+        UnsupportedJwtException::class,
+        InvalidUserTokenException::class,
+        ForbiddenException::class,
+    )
+    fun authorizationException(
+        error: Exception,
+        request: WebRequest,
+    ): ResponseEntity<Any>? {
+        val statusCode: HttpStatus = when(error) {
+            is SignatureException -> HttpStatus.CONFLICT
+            is MalformedJwtException -> HttpStatus.BAD_GATEWAY
+            is ExpiredJwtException -> HttpStatus.UNAUTHORIZED
+            is UnsupportedJwtException -> HttpStatus.FORBIDDEN
+            is ForbiddenException -> HttpStatus.FORBIDDEN
+            is InvalidUserTokenException -> HttpStatus.UNAUTHORIZED
+            else -> HttpStatus.BAD_REQUEST
+        }
+
+        val status: HttpStatusCode = HttpStatusCode.valueOf(statusCode.value())
         val detail = ProblemDetail.forStatusAndDetail(status, error.message)
         return ResponseEntity.of(detail).build()
     }

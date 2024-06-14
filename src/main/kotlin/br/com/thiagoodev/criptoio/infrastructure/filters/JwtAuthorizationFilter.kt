@@ -1,5 +1,6 @@
 package br.com.thiagoodev.criptoio.infrastructure.filters
 
+import br.com.thiagoodev.criptoio.domain.exceptions.ForbiddenException
 import br.com.thiagoodev.criptoio.infrastructure.services.JwtService
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
@@ -12,6 +13,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 import org.springframework.web.servlet.HandlerExceptionResolver
+import java.util.function.Supplier
 
 @Component
 class JwtAuthorizationFilter(
@@ -27,7 +29,10 @@ class JwtAuthorizationFilter(
         val authorizationHeader: String? = request.getHeader("Authorization")
 
         if(authorizationHeader == null || !authorizationHeader.startsWith("Bearer")) {
-            return filterChain.doFilter(request, response)
+            val error = ForbiddenException(
+                "No authentication credentials provided. Please include a valid token in the Authorization header.")
+            handlerExceptionResolver.resolveException(request, response, null, error)
+            return
         }
 
         try {

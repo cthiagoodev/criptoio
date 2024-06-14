@@ -5,7 +5,6 @@ import br.com.thiagoodev.criptoio.application.services.CryptocurrencyService
 import br.com.thiagoodev.criptoio.domain.entities.CryptoVariationPrice
 import br.com.thiagoodev.criptoio.domain.entities.Cryptocurrency
 import org.springframework.data.domain.Page
-import org.springframework.data.jpa.repository.Query
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable

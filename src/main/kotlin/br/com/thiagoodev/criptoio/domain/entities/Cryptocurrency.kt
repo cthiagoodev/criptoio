@@ -47,7 +47,7 @@ class Cryptocurrency(
 
     @JsonIgnoreProperties(value = ["cryptocurrency"])
     @OneToMany(mappedBy = "cryptocurrency", cascade = [CascadeType.ALL])
-    val history: List<CryptoVariationPrice> = emptyList(),
+    var history: MutableList<CryptoVariationPrice> = mutableListOf(),
 ) {
     companion object {
         fun generateId(key: String): String {

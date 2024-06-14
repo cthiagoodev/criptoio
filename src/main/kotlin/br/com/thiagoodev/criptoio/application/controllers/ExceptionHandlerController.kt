@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.ProblemDetail
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.context.request.WebRequest
@@ -36,6 +37,16 @@ class ExceptionHandlerController : ResponseEntityExceptionHandler() {
     ): ResponseEntity<Any>? {
         val status: HttpStatusCode = HttpStatusCode.valueOf(HttpStatus.NOT_FOUND.value())
         val detail = ProblemDetail.forStatusAndDetail(status, error.message)
+        return ResponseEntity.of(detail).build()
+    }
+
+    @ExceptionHandler(UsernameNotFoundException::class)
+    fun userException(
+        error: Exception,
+        request: WebRequest,
+    ): ResponseEntity<Any>? {
+        val status: HttpStatusCode = HttpStatusCode.valueOf(HttpStatus.NOT_FOUND.value())
+        val detail = ProblemDetail.forStatusAndDetail(status, error.message ?: "User not found")
         return ResponseEntity.of(detail).build()
     }
 

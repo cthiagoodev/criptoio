@@ -36,6 +36,7 @@ class SecurityConfig(
                 it
                     .requestMatchers(HttpMethod.POST, "/api/user/register").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/login").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/refresh").permitAll()
                     .anyRequest().authenticated()
             }
 

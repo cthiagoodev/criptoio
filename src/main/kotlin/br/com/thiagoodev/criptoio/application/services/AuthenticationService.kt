@@ -2,12 +2,14 @@ package br.com.thiagoodev.criptoio.application.services
 
 import br.com.thiagoodev.criptoio.application.dtos.JwtDto
 import br.com.thiagoodev.criptoio.application.dtos.LoginDto
+import br.com.thiagoodev.criptoio.domain.entities.User
 import br.com.thiagoodev.criptoio.infrastructure.services.JwtService
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 
 @Service
@@ -31,5 +33,19 @@ class AuthenticationService(
         val expiration: Long = jwtService.getExpiration()
 
         return JwtDto(token, expiration)
+    }
+
+    fun refresh(token: String): JwtDto {
+        val email: String = jwtService.getSubject(token) ?: throw UsernameNotFoundException("User not found")
+        val user: User = userService.findByEmail(email)
+        val expiration: Long = jwtService.getExpiration()
+
+        if(jwtService.tokenIsValid(token, user)) {
+            return JwtDto(token, expiration)
+        }
+
+        val newToken: String = jwtService.buildToken(user)
+
+        return JwtDto(newToken, expiration)
     }
 }

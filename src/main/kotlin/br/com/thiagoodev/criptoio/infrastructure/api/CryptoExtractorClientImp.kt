@@ -1,6 +1,7 @@
 package br.com.thiagoodev.criptoio.infrastructure.api
 
 import br.com.thiagoodev.criptoio.domain.exceptions.BadRequestException
+import br.com.thiagoodev.criptoio.domain.exceptions.ForbiddenException
 import br.com.thiagoodev.criptoio.domain.exceptions.InternalServerException
 import br.com.thiagoodev.criptoio.domain.value_objects.CryptocurrencyPrice
 import com.fasterxml.jackson.databind.JsonNode
@@ -14,12 +15,12 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
 
 @Service
-class CryptocurrencyPriceApiClientImp : CryptocurrencyPriceApiClient {
+class CryptoExtractorClientImp : CryptoExtractorClient {
     @Value("\${api.base.url}")
     private lateinit var baseUrl: String
 
-    override fun list(page: Int, limit: Int, base: String): List<CryptocurrencyPrice> {
-        val url = "${baseUrl}/api/v3/coins/markets?vs_currency=$base&page=$page&per_page=$limit"
+    override fun extract(): List<CryptocurrencyPrice> {
+        val url = "${baseUrl}/api/v3/coins/markets?vs_currency=brl&page=1&per_page=50"
 
         try {
             val client = WebClient.builder()
@@ -59,6 +60,7 @@ class CryptocurrencyPriceApiClientImp : CryptocurrencyPriceApiClient {
         } catch(error: WebClientResponseException) {
             throw when(error.statusCode) {
                 HttpStatus.BAD_REQUEST -> BadRequestException(error.message)
+                HttpStatus.FORBIDDEN -> ForbiddenException(error.message)
                 else -> InternalServerException(error.message)
             }
         } catch(error: Exception) {

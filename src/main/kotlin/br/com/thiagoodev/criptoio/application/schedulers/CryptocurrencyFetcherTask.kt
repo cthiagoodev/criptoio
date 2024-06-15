@@ -3,7 +3,6 @@ package br.com.thiagoodev.criptoio.application.schedulers
 import br.com.thiagoodev.criptoio.application.services.CryptoVariationPriceService
 import br.com.thiagoodev.criptoio.application.services.CryptocurrencyService
 import br.com.thiagoodev.criptoio.domain.entities.CryptoVariationPrice
-import br.com.thiagoodev.criptoio.domain.entities.Cryptocurrency
 import br.com.thiagoodev.criptoio.domain.value_objects.ExtractionResult
 import br.com.thiagoodev.criptoio.infrastructure.services.CryptocurrencyApiFetcher
 import jakarta.persistence.PersistenceException
@@ -24,8 +23,9 @@ class CryptocurrencyFetcherTask(
     fun findDataAndSave() {
         try {
             val response: ExtractionResult = fetcher.extract()
-            if(response is ExtractionResult.Success<*>) {
-                val cryptos = response.result as List<Cryptocurrency>
+
+            if(response is ExtractionResult.Success) {
+                val cryptos = response.result
                 val variations: List<CryptoVariationPrice> = cryptos.map { it.toCryptocurrencyVariationPrice() }
 
                 cryptocurrencyService.saveAll(cryptos)

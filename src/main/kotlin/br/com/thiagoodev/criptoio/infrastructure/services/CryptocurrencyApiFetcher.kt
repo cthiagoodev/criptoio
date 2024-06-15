@@ -5,18 +5,18 @@ import br.com.thiagoodev.criptoio.domain.exceptions.BadRequestException
 import br.com.thiagoodev.criptoio.domain.exceptions.InternalServerException
 import br.com.thiagoodev.criptoio.domain.value_objects.CryptocurrencyPrice
 import br.com.thiagoodev.criptoio.domain.value_objects.ExtractionResult
-import br.com.thiagoodev.criptoio.infrastructure.api.CryptocurrencyPriceApiClient
+import br.com.thiagoodev.criptoio.infrastructure.api.CryptoExtractorClient
 import org.springframework.stereotype.Service
 import java.util.logging.Level
 import java.util.logging.Logger
 
 @Service
-class CryptocurrencyApiFetcher(private val api: CryptocurrencyPriceApiClient) {
+class CryptocurrencyApiFetcher(private val client: CryptoExtractorClient) {
     private val logger: Logger = Logger.getLogger("CryptocurrencyApiFetcherLogger")
 
     fun extract(): ExtractionResult {
         try {
-            val response: List<CryptocurrencyPrice> = api.list(1, 50, "brl")
+            val response: List<CryptocurrencyPrice> = client.extract()
             val cryptos: List<Cryptocurrency> = response.map { it.toCryptocurrency() }
             return ExtractionResult.Success(cryptos)
         } catch(error: BadRequestException) {

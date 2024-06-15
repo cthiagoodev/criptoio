@@ -28,8 +28,13 @@ class CryptocurrencyController(
     }
 
     @GetMapping("/{id}/history")
-    fun history(@PathVariable("id") cryptocurrency: String): ResponseEntity<List<CryptoVariationPrice>> {
-        val variation: List<CryptoVariationPrice> = variationPriceService.findByCryptocurrencyId(cryptocurrency)
+    fun history(
+        @PathVariable("id") cryptocurrency: String,
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "10") size: Int,
+    ): ResponseEntity<Page<CryptoVariationPrice>> {
+        val variation: Page<CryptoVariationPrice> =
+            variationPriceService.findByCryptocurrencyId(cryptocurrency, page, size)
         return ResponseEntity.ok(variation)
     }
 }

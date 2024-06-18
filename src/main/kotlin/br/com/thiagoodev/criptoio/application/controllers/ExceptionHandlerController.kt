@@ -48,7 +48,13 @@ class ExceptionHandlerController : ResponseEntityExceptionHandler() {
         error: Exception,
         request: WebRequest,
     ): ResponseEntity<Any>? {
-        val status: HttpStatusCode = HttpStatusCode.valueOf(HttpStatus.NOT_FOUND.value())
+        val code: HttpStatus = when(error) {
+            is UsernameNotFoundException -> HttpStatus.NOT_FOUND
+            is UserNotAuthenticatedException -> HttpStatus.UNAUTHORIZED
+            else -> HttpStatus.NOT_FOUND
+        }
+
+        val status: HttpStatusCode = HttpStatusCode.valueOf(code.value())
         val detail = ProblemDetail.forStatusAndDetail(status, error.message ?: "User not found")
         return ResponseEntity.of(detail).build()
     }

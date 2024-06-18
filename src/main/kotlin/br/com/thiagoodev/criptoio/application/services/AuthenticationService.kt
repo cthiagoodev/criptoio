@@ -3,10 +3,12 @@ package br.com.thiagoodev.criptoio.application.services
 import br.com.thiagoodev.criptoio.application.dtos.JwtDto
 import br.com.thiagoodev.criptoio.application.dtos.LoginDto
 import br.com.thiagoodev.criptoio.domain.entities.User
+import br.com.thiagoodev.criptoio.domain.exceptions.UserNotAuthenticatedException
 import br.com.thiagoodev.criptoio.infrastructure.services.JwtService
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
+import org.springframework.security.core.AuthenticationException
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UsernameNotFoundException
@@ -19,20 +21,28 @@ class AuthenticationService(
     private val jwtService: JwtService,
 ) {
     fun login(form: LoginDto): JwtDto {
-        val userAuthentication = UsernamePasswordAuthenticationToken(form.email, form.password)
-        val authentication: Authentication = authenticationManager.authenticate(userAuthentication)
+        try {
+            val userAuthentication = UsernamePasswordAuthenticationToken(form.email, form.password)
+            val authentication: Authentication = authenticationManager.authenticate(userAuthentication)
 
-        SecurityContextHolder.getContext().authentication = authentication
+            SecurityContextHolder.getContext().authentication = authentication
 
-        if(!authentication.isAuthenticated) {
-            throw Exception()
+            if(!authentication.isAuthenticated) {
+                throw UserNotAuthenticatedException(
+                    "Authentication Failed. Your request could not be authenticated. Please check the following and try again:")
+            }
+
+            val user: UserDetails = userService.findByEmail(form.email)
+            val token: String = jwtService.buildToken(user)
+            val expiration: Long = jwtService.getExpiration()
+
+            return JwtDto(token, expiration)
+        } catch(error: AuthenticationException) {
+            throw UserNotAuthenticatedException(
+                "Authentication Failed. Your request could not be authenticated. Please check the following and try again:")
+        } catch(error: Exception) {
+            throw error
         }
-
-        val user: UserDetails = userService.findByEmail(form.email)
-        val token: String = jwtService.buildToken(user)
-        val expiration: Long = jwtService.getExpiration()
-
-        return JwtDto(token, expiration)
     }
 
     fun refresh(token: String): JwtDto {

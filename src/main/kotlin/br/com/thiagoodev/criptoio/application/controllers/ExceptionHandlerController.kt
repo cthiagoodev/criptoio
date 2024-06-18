@@ -40,7 +40,10 @@ class ExceptionHandlerController : ResponseEntityExceptionHandler() {
         return ResponseEntity.of(detail).build()
     }
 
-    @ExceptionHandler(UsernameNotFoundException::class)
+    @ExceptionHandler(
+        UsernameNotFoundException::class,
+        UserNotAuthenticatedException::class,
+    )
     fun userException(
         error: Exception,
         request: WebRequest,

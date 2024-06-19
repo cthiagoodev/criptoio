@@ -1,12 +1,14 @@
 package br.com.thiagoodev.criptoio.application.services
 
 import br.com.thiagoodev.criptoio.application.dtos.RegisterDto
+import br.com.thiagoodev.criptoio.application.dtos.RegisterSuccessDto
 import br.com.thiagoodev.criptoio.domain.entities.User
 import br.com.thiagoodev.criptoio.domain.exceptions.DataConflictException
 import br.com.thiagoodev.criptoio.domain.exceptions.InvalidUserTokenException
 import br.com.thiagoodev.criptoio.domain.exceptions.ValidationException
 import br.com.thiagoodev.criptoio.infrastructure.repositories.JpaUserRepository
 import br.com.thiagoodev.criptoio.infrastructure.services.JwtService
+import org.hibernate.exception.ConstraintViolationException
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
@@ -27,7 +29,7 @@ class UserService(
         return findByEmail(email)
     }
 
-    fun create(form: RegisterDto): User {
+    fun create(form: RegisterDto): RegisterSuccessDto {
         if(!form.validate()) {
             throw ValidationException("The information you have provided is invalid")
         }
@@ -41,15 +43,24 @@ class UserService(
             email = form.email,
             password = encoder.encode(form.password),
             cpf = form.cpf,
-            dateOfBirth = form.dateOfBirth.toLocalDate(),
+            dateOfBirth = form.dateOfBirth,
         )
 
         try {
-            return jpaUserRepository.save(user)
+            val newUser: User =  jpaUserRepository.save(user)
+            return RegisterSuccessDto(
+                message = "Your account has been created successfully",
+                uuid = newUser.uuid.toString(),
+            )
         } catch(error: TransactionSystemException) {
             throw ValidationException(error.message)
         } catch(error: DataIntegrityViolationException) {
+            if(error.fillInStackTrace().cause is ConstraintViolationException) {
+                throw DataConflictException("It looks like an account with this email address already exists")
+            }
+
             val message: String? = error.cause?.cause?.message
+
             throw DataConflictException(message)
         } catch(error: Exception) {
             throw error

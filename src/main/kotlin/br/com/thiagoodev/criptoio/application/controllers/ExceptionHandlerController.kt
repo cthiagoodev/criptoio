@@ -5,18 +5,31 @@ import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.UnsupportedJwtException
 import io.jsonwebtoken.security.SignatureException
-import org.springframework.http.HttpStatus
-import org.springframework.http.HttpStatusCode
-import org.springframework.http.ProblemDetail
-import org.springframework.http.ResponseEntity
+import org.springframework.http.*
 import org.springframework.security.core.userdetails.UsernameNotFoundException
+import org.springframework.web.bind.MethodArgumentNotValidException
+import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
-import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 
-@RestControllerAdvice
+@ControllerAdvice
 class ExceptionHandlerController : ResponseEntityExceptionHandler() {
+    override fun handleMethodArgumentNotValid(
+        error: MethodArgumentNotValidException,
+        headers: HttpHeaders,
+        status: HttpStatusCode,
+        request: WebRequest
+    ): ResponseEntity<Any>? {
+        val errors: MutableMap<String, String> = mutableMapOf()
+
+        for(err in error.allErrors) {
+            errors[err.objectName] to err.defaultMessage
+        }
+
+        return createResponseEntity(error, headers, status, request)
+    }
+
     @ExceptionHandler(
         ValidationException::class,
         DataConflictException::class,

@@ -3,7 +3,7 @@ package br.com.thiagoodev.criptoio.application.dtos
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
-import java.time.LocalDateTime
+import java.time.LocalDate
 
 data class RegisterDto(
     @field:NotBlank(message = "Name must not be blank")
@@ -16,7 +16,7 @@ data class RegisterDto(
     @field:NotBlank
     val cpf: String,
     @field:NotNull(message = "Date of birth must not be blank")
-    val dateOfBirth: LocalDateTime,
+    val dateOfBirth: LocalDate,
 ) {
     fun validate(): Boolean {
         return name.isNotEmpty() &&

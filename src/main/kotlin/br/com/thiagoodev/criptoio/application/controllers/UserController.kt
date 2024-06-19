@@ -1,6 +1,7 @@
 package br.com.thiagoodev.criptoio.application.controllers
 
 import br.com.thiagoodev.criptoio.application.dtos.RegisterDto
+import br.com.thiagoodev.criptoio.application.dtos.RegisterSuccessDto
 import br.com.thiagoodev.criptoio.application.services.UserService
 import br.com.thiagoodev.criptoio.domain.entities.User
 import jakarta.validation.Valid
@@ -23,8 +24,8 @@ class UserController(private val userService: UserService) {
     }
 
     @PostMapping("/register")
-    fun register(@Valid @RequestBody form: RegisterDto): ResponseEntity<User> {
-        val user: User = userService.create(form)
-        return ResponseEntity.status(HttpStatus.CREATED).body(user)
+    fun register(@Valid @RequestBody form: RegisterDto): ResponseEntity<RegisterSuccessDto> {
+        val dto: RegisterSuccessDto = userService.create(form)
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto)
     }
 }

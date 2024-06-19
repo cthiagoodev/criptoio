@@ -10,6 +10,8 @@ import br.com.thiagoodev.criptoio.infrastructure.repositories.JpaUserRepository
 import br.com.thiagoodev.criptoio.infrastructure.services.JwtService
 import org.hibernate.exception.ConstraintViolationException
 import org.springframework.dao.DataIntegrityViolationException
+import org.springframework.dao.EmptyResultDataAccessException
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.TransactionSystemException
@@ -21,7 +23,11 @@ class UserService(
     private val jwtService: JwtService,
 ) {
     fun findByEmail(email: String): User {
-        return jpaUserRepository.findByEmail(email)
+        try {
+            return jpaUserRepository.findByEmail(email)
+        } catch(error: EmptyResultDataAccessException) {
+            throw UsernameNotFoundException("User with email $email not found")
+        }
     }
 
     fun me(token: String): User {

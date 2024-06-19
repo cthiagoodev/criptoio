@@ -40,8 +40,6 @@ class AuthenticationService(
         } catch(error: AuthenticationException) {
             throw UserNotAuthenticatedException(
                 "Authentication Failed. Your request could not be authenticated. Please check the following and try again:")
-        } catch(error: Exception) {
-            throw error
         }
     }
 
